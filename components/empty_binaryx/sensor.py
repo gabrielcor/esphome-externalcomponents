@@ -6,7 +6,7 @@ from esphome.const import (
     CONF_TRIGGER_ID
 )
 
-AUTO_LOAD = [ "binary_sensor", "sensor" ]
+# AUTO_LOAD = [ "binary_sensor", "sensor" ]
 
 empty_binaryx_sensor_ns = cg.esphome_ns.namespace('empty_binaryx')
 
