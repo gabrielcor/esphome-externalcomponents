@@ -1,0 +1,16 @@
+esphome:
+  name: test-external_components
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+external_components:
+ - source:
+     type: local
+     path: local_components
+   components: [empty_binary_sensor]
+     
+empty_binary_sensor:
+   id: sensorbin
