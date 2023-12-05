@@ -35,6 +35,7 @@ FILTER_MODES = {
 }
 
 SetTotalPulsesAction = ticket_dispenser_ns.class_("SetTotalPulsesAction", automation.Action)
+SetTotalTicketsAction = ticket_dispenser_ns.class_("SetTotalTicketsAction", automation.Action)
 
 
 def validate_internal_filter(value):
@@ -117,7 +118,7 @@ async def set_total_action_to_code(config, action_id, template_arg, args):
 
 @automation.register_action(
     "ticket_dispenser.set_total_tickets",
-    SetTotalPulsesAction,
+    SetTotalTicketsAction,
     cv.Schema(
         {
             cv.Required(CONF_ID): cv.use_id(PulseMeterSensor),
