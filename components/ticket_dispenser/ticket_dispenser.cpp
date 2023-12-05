@@ -1,4 +1,4 @@
-#include "ticket_dispenser_sensor.h"
+#include "ticket_dispenser.h"
 #include <utility>
 #include "esphome/core/log.h"
 
