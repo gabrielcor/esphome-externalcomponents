@@ -31,20 +31,33 @@ external_components:
      url: https://github.com/gabrielcor/esphome-externalcomponents
    components: [ticket_dispenser]
    refresh: 1s
-     
+
+# on_value shows how to get current value of the sensor if needed
+# timeout: time with no pulses for a ticket to be considered "read"
 sensor:
   - platform: ticket_dispenser
     pin: 19
     name: "Ticket Dispenser"
     id: sensor_ticket_dispenser
+    timeout: 2s
     total:
-      name: "Total Pulses"
-
+      name: "Last Pulse Count"
+    on_value:
+      - lambda: |-
+          char arrayX[10];
+          sprintf(arrayX, "%f", x);  
+          ESP_LOGD("dispenser",arrayX);
 button:
   - platform: template
     name: "Set Zero"
     on_press:
       - ticket_dispenser.set_total_pulses:
+          id: sensor_ticket_dispenser
+          value: !lambda 'return 0;'
+  - platform: template
+    name: "Ticket Zero"
+    on_press:
+      - ticket_dispenser.set_total_tickets:
           id: sensor_ticket_dispenser
           value: !lambda 'return 0;'
 
