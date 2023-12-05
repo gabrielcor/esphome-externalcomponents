@@ -20,5 +20,17 @@ template<typename... Ts> class SetTotalPulsesAction : public Action<Ts...> {
   PulseMeterSensor *ticket_dispenser_;
 };
 
+
+template<typename... Ts> class SetTotalTicketsAction : public Action<Ts...> {
+ public:
+  SetTotalTicketsAction(PulseMeterSensor *ticket_dispenser) : ticket_dispenser_(ticket_dispenser) {}
+
+  TEMPLATABLE_VALUE(uint32_t, total_tickets)
+
+  void play(Ts... x) override { this->ticket_dispenser_->set_total_tickets(this->total_tickets_.value(x...)); }
+
+ protected:
+  PulseMeterSensor *ticket_dispenser_;
+};
 }  // namespace ticket_dispenser
 }  // namespace esphome
