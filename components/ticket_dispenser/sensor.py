@@ -19,7 +19,7 @@ from esphome.const import (
 )
 from esphome.core import CORE
 
-CODEOWNERS = ["@stevebaxter", "@cstaahl", "@TrentHouliston"]
+CODEOWNERS = ["@gabrielcor"]
 
 ticket_dispenser_ns = cg.esphome_ns.namespace("ticket_dispenser")
 
@@ -59,10 +59,10 @@ def validate_ticket_dispenser_pin(value):
 
 CONFIG_SCHEMA = sensor.sensor_schema(
     PulseMeterSensor,
-#    unit_of_measurement=UNIT_PULSES_PER_MINUTE,
-    unit_of_measurement=UNIT_PULSES,
+#    unit_of_measurement=UNIT_PULSES,
+    unit_of_measurement="tickets",
     icon=ICON_PULSE,
-    accuracy_decimals=2,
+    accuracy_decimals=0,
     state_class=STATE_CLASS_MEASUREMENT,
 ).extend(
     {
@@ -112,4 +112,22 @@ async def set_total_action_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg, paren)
     template_ = await cg.templatable(config[CONF_VALUE], args, int)
     cg.add(var.set_total_pulses(template_))
+    return var
+
+
+@automation.register_action(
+    "ticket_dispenser.set_total_tickets",
+    SetTotalPulsesAction,
+    cv.Schema(
+        {
+            cv.Required(CONF_ID): cv.use_id(PulseMeterSensor),
+            cv.Required(CONF_VALUE): cv.templatable(cv.uint32_t),
+        }
+    ),
+)
+async def set_total_action_to_code(config, action_id, template_arg, args):
+    paren = await cg.get_variable(config[CONF_ID])
+    var = cg.new_Pvariable(action_id, template_arg, paren)
+    template_ = await cg.templatable(config[CONF_VALUE], args, int)
+    cg.add(var.set_total_tickets(template_))
     return var

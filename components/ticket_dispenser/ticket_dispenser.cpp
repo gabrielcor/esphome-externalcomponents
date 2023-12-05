@@ -14,6 +14,11 @@ void PulseMeterSensor::set_total_pulses(uint32_t pulses) {
   }
 }
 
+// Mantain the total tickets detected
+void PulseMeterSensor::set_total_tickets(uint32_t tickets) {
+  this->total_tickets_ = tickets;
+}
+
 void PulseMeterSensor::setup() {
   this->pin_->setup();
   this->isr_pin_ = pin_->to_isr();
@@ -56,8 +61,8 @@ void PulseMeterSensor::loop() {
       case MeterState::RUNNING: {
         uint32_t delta_us = this->get_->last_detected_edge_us_ - this->last_processed_edge_us_;
         float pulse_width_us = delta_us / float(this->get_->count_);
-        // this->publish_state((60.0f * 1000000.0f) / pulse_width_us);
-        this->publish_state(this->total_pulses_);
+        // this->publish_state(this->total_pulses_);
+        this->publish_state(this->total_tickets_);
       } break;
     }
 
@@ -72,11 +77,16 @@ void PulseMeterSensor::loop() {
       // Running and initial states can timeout
       case MeterState::INITIAL:
       case MeterState::RUNNING: {
+        // If we haven't received a pulse in a while we can assume a ticket has passed
         if (time_since_valid_edge_us > this->timeout_us_) {
           this->meter_state_ = MeterState::TIMED_OUT;
-          ESP_LOGD(TAG, "No pulse detected for %" PRIu32 "s, assuming 0 pulses/min",
+          ESP_LOGD(TAG, "No pulse detected for %" PRIu32 "s, assuming a ticket",
                    time_since_valid_edge_us / 1000000);
-          this->publish_state(0.0f);
+          if (this->total_pulses_ > 0) {
+            this->total_tickets_++;
+            this->total_pulses_ = 0;
+          }
+          this->publish_state(this->total_tickets_);
         }
       } break;
       default:
