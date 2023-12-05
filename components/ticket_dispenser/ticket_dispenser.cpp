@@ -56,7 +56,8 @@ void PulseMeterSensor::loop() {
       case MeterState::RUNNING: {
         uint32_t delta_us = this->get_->last_detected_edge_us_ - this->last_processed_edge_us_;
         float pulse_width_us = delta_us / float(this->get_->count_);
-        this->publish_state((60.0f * 1000000.0f) / pulse_width_us);
+        // this->publish_state((60.0f * 1000000.0f) / pulse_width_us);
+        this->publish_state(this->total_pulses_);
       } break;
     }
 
