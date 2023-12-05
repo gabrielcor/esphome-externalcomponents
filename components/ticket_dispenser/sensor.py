@@ -59,7 +59,8 @@ def validate_ticket_dispenser_pin(value):
 
 CONFIG_SCHEMA = sensor.sensor_schema(
     PulseMeterSensor,
-    unit_of_measurement=UNIT_PULSES_PER_MINUTE,
+#    unit_of_measurement=UNIT_PULSES_PER_MINUTE,
+    unit_of_measurement=UNIT_PULSES,
     icon=ICON_PULSE,
     accuracy_decimals=2,
     state_class=STATE_CLASS_MEASUREMENT,
