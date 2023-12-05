@@ -1,0 +1,62 @@
+esphome:
+  name: test-pulsemeter
+  friendly_name: test-pulsemeter
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  manual_ip:
+     static_ip: 192.168.1.80
+     gateway: 192.168.1.1
+     subnet: 255.255.255.0  
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Test-Pulsemeter Fallback Hotspot"
+    password: "TFhMfIr2FlYJ"
+
+captive_portal:
+
+
+external_components:
+ - source:
+     type: git
+     url: https://github.com/gabrielcor/esphome-externalcomponents
+   components: [pulse_meter_new]
+     
+sensor:
+  - platform: pulse_meter_new
+    pin: 19
+    name: "Pulse Meter"
+    id: sensor_pulse_meter_new
+    total:
+      name: "Total Pulses"
+
+#sensor:
+#  - platform: pulse_meter
+#    pin: 19
+#    name: "Pulse Meter"
+#    id: sensor_pulse_meter
+#    total:
+#      name: "Total Pulses"
+button:
+  - platform: template
+    name: "Set Zero"
+    on_press:
+      - pulse_meter_new.set_total_pulses:
+          id: sensor_pulse_meter_new
+          value: !lambda 'return 0;'
+

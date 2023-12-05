@@ -1,0 +1,18 @@
+esphome:
+  name: test-external_components
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+external_components:
+ - source:
+     type: git
+     url: https://github.com/gabrielcor/esphome-externalcomponents
+   refresh: 1s
+   components: [empty_binaryx]
+     
+sensor:
+  - platform: empty_binaryx
+    id: sensorbin
