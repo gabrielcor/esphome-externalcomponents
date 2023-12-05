@@ -60,11 +60,10 @@ def validate_ticket_dispenser_pin(value):
 
 CONFIG_SCHEMA = sensor.sensor_schema(
     PulseMeterSensor,
-#    unit_of_measurement=UNIT_PULSES,
     unit_of_measurement="tickets",
     icon=ICON_PULSE,
     accuracy_decimals=0,
-    state_class=STATE_CLASS_MEASUREMENT,
+    state_class=STATE_CLASS_TOTAL_INCREASING,
 ).extend(
     {
         cv.Required(CONF_PIN): validate_ticket_dispenser_pin,
