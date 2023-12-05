@@ -1,5 +1,5 @@
 esphome:
-  name: test_ticket_dispenser
+  name: test-ticket-dispenser
   friendly_name: test_ticket_dispenser
 
 esp32:

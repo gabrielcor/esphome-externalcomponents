@@ -21,10 +21,10 @@ from esphome.core import CORE
 
 CODEOWNERS = ["@stevebaxter", "@cstaahl", "@TrentHouliston"]
 
-pulse_meter_new_ns = cg.esphome_ns.namespace("pulse_meter_new")
+ticket_dispenser_ns = cg.esphome_ns.namespace("ticket_dispenser")
 
 
-PulseMeterSensor = pulse_meter_new_ns.class_(
+PulseMeterSensor = ticket_dispenser_ns.class_(
     "PulseMeterSensor", sensor.Sensor, cg.Component
 )
 
@@ -34,7 +34,7 @@ FILTER_MODES = {
     "PULSE": PulseMeterInternalFilterMode.FILTER_PULSE,
 }
 
-SetTotalPulsesAction = pulse_meter_new_ns.class_("SetTotalPulsesAction", automation.Action)
+SetTotalPulsesAction = ticket_dispenser_ns.class_("SetTotalPulsesAction", automation.Action)
 
 
 def validate_internal_filter(value):
@@ -48,7 +48,7 @@ def validate_timeout(value):
     return value
 
 
-def validate_pulse_meter_new_pin(value):
+def validate_ticket_dispenser_pin(value):
     value = pins.internal_gpio_input_pin_schema(value)
     if CORE.is_esp8266 and value[CONF_NUMBER] >= 16:
         raise cv.Invalid(
@@ -65,7 +65,7 @@ CONFIG_SCHEMA = sensor.sensor_schema(
     state_class=STATE_CLASS_MEASUREMENT,
 ).extend(
     {
-        cv.Required(CONF_PIN): validate_pulse_meter_new_pin,
+        cv.Required(CONF_PIN): validate_ticket_dispenser_pin,
         cv.Optional(CONF_INTERNAL_FILTER, default="13us"): validate_internal_filter,
         cv.Optional(CONF_TIMEOUT, default="5min"): validate_timeout,
         cv.Optional(CONF_TOTAL): sensor.sensor_schema(
@@ -97,7 +97,7 @@ async def to_code(config):
 
 
 @automation.register_action(
-    "pulse_meter_new.set_total_pulses",
+    "ticket_dispenser.set_total_pulses",
     SetTotalPulsesAction,
     cv.Schema(
         {
