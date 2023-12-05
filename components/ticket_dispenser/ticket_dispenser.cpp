@@ -14,9 +14,10 @@ void PulseMeterSensor::set_total_pulses(uint32_t pulses) {
   }
 }
 
-// Mantain the total tickets detected
+// Set total tickets
 void PulseMeterSensor::set_total_tickets(uint32_t tickets) {
   this->total_tickets_ = tickets;
+  this->publish_state(this->total_tickets_);
 }
 
 void PulseMeterSensor::setup() {
