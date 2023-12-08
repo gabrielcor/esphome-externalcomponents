@@ -2,6 +2,8 @@
 namespace esphome {
 namespace knock_pattern_detector {
 
+static const char *const TAG = "knock_pattern_detector";
+
 void CustomKnockPatternDetector::setup() {
   /*
       ESP_LOGD("CustomKnockSensor", "Pin: %d", this->pin_);
