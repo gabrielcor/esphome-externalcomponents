@@ -9,9 +9,9 @@ This project is using [ESPHome](https://esphome.io/).
 -   [x] ticket_dispenser: allows ticket detection for a ticket dispenser like the one sold at https://es.aliexpress.com/item/1005004289633949.html
 
 
-![Ticket dispenser images](https://github.com/gabrielcor/esphome-externalcomponents/blob/main/images/ticketdispenser01.jpeg)(https://github.com/gabrielcor/esphome-externalcomponents/blob/main/images/ticketdispenser02.jpeg)
-
-
+![Ticket dispenser images](https://github.com/gabrielcor/esphome-externalcomponents/blob/main/images/ticketdispenser01.jpeg)
+![Ticket dispenser images](https://github.com/gabrielcor/esphome-externalcomponents/blob/main/images/ticketdispenser02.jpeg)
+![Ticket dispenser images](https://github.com/gabrielcor/esphome-externalcomponents/blob/main/images/ticketdispenser03.jpeg)
 ## Instructions
 
 -   Copy the code and edit to your ESPs specifications.
