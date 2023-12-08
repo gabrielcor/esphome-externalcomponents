@@ -1,9 +1,10 @@
 esphome:
-  name: test_knock_pattern_detector
+  name: test-empty-binaryx
   friendly_name: test_knock_pattern_detector
 
 esp32:
-  board: esp32dev
+  board: esp32-s3-devkitc-1
+  #board: esp32dev
   framework:
     type: arduino
 
@@ -11,9 +12,9 @@ esp32:
 logger:
 
 # Enable Home Assistant API
-#api:
+api:
 
-#ota:
+ota:
  
 wifi:
   ssid: !secret wifi_ssid
@@ -23,7 +24,7 @@ wifi:
      gateway: 192.168.1.1
      subnet: 255.255.255.0  
 
-# captive_portal:
+captive_portal:
 
 external_components:
  - source:
