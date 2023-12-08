@@ -3,7 +3,22 @@ namespace esphome {
 namespace knock_pattern_detector {
 
 void CustomKnockPatternDetector::setup() {
-  ESP_LOGD("knock_pattern_detector", "Pin: %d, Knock Pattern Length: %s, Sensor Threshold: %d", pin_->get_pin(), knock_pattern_length_.c_str(), knock_sensor_threshold_);
+      ESP_LOGD("CustomKnockSensor", "Knock Pattern Length: %d", knock_pattern_length_);
+
+      ESP_LOGD("CustomKnockSensor", "Knock Sensor Threshold: %d", knock_sensor_threshold_);
+
+      ESP_LOGD("CustomKnockSensor", "Knock Error Tolerance: %d", knock_error_tolerance_);
+
+      ESP_LOGD("CustomKnockSensor", "Knock Average Error Tolerance: %d", knock_average_error_tolerance_);
+
+      ESP_LOGD("CustomKnockSensor", "Knock Pattern Min Gap: %d", knock_pattern_mingap_between_knocks_);
+
+      ESP_LOGD("CustomKnockSensor", "Knock Pattern Max Gap: %d", knock_pattern_maxgap_between_knocks_);
+
+      ESP_LOGD("CustomKnockSensor", "Knock Pattern Values:");
+      for (const auto &value : knock_pattern_) {
+          ESP_LOGD("CustomKnockSensor", "%d", value);
+      }
 }
 
 /*
