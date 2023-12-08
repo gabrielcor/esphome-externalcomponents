@@ -21,7 +21,8 @@ class CustomKnockPatternDetector : public sensor::Sensor, public Component {
   void set_knock_pattern_maxgap_between_knocks(uint32_t maxgap) { this->knock_pattern_maxgap_between_knocks_ = maxgap; }
 
  void setup() override;
-  void loop() override;
+ void loop() override;
+ void dump_config() override;
 
  protected:
   GPIOPin *pin_;

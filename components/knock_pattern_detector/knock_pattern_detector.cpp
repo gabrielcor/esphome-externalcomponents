@@ -3,6 +3,7 @@ namespace esphome {
 namespace knock_pattern_detector {
 
 void CustomKnockPatternDetector::setup() {
+  /*
       ESP_LOGD("CustomKnockSensor", "Pin: %d", this->pin_);
 
       ESP_LOGD("CustomKnockSensor", "Knock Pattern Length: %d", knock_pattern_length_);
@@ -21,8 +22,32 @@ void CustomKnockPatternDetector::setup() {
       for (const auto &value : knock_pattern_) {
           ESP_LOGD("CustomKnockSensor", "%d", value);
       }
+      */
 }
 
+void CustomKnockPatternDetector::dump_config() {
+  LOG_SENSOR("", "Pulse Meter", this);
+  LOG_PIN("  Pin: ", this->pin_);
+  ESP_LOGCONFIG("CustomKnockSensor", "Pin: %d", this->pin_);
+
+  ESP_LOGCONFIG("CustomKnockSensor", "Knock Pattern Length: %d", knock_pattern_length_);
+
+  ESP_LOGCONFIG("CustomKnockSensor", "Knock Sensor Threshold: %d", knock_sensor_threshold_);
+
+  ESP_LOGCONFIG("CustomKnockSensor", "Knock Error Tolerance: %d", knock_error_tolerance_);
+
+  ESP_LOGCONFIG("CustomKnockSensor", "Knock Average Error Tolerance: %d", knock_average_error_tolerance_);
+
+  ESP_LOGCONFIG("CustomKnockSensor", "Knock Pattern Min Gap: %d", knock_pattern_mingap_between_knocks_);
+
+  ESP_LOGCONFIG("CustomKnockSensor", "Knock Pattern Max Gap: %d", knock_pattern_maxgap_between_knocks_);
+
+  ESP_LOGCONFIG("CustomKnockSensor", "Knock Pattern Values:");
+  for (const auto &value : knock_pattern_) {
+      ESP_LOGCONFIG("CustomKnockSensor", "%d", value);
+  }
+
+}
 /*
   std::vector<int> knock_pattern_;  
   int knock_pattern_length_;
