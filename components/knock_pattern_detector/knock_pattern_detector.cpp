@@ -3,6 +3,8 @@ namespace esphome {
 namespace knock_pattern_detector {
 
 void CustomKnockPatternDetector::setup() {
+      ESP_LOGD("CustomKnockSensor", "Pin: %d", pin_->get_pin());
+
       ESP_LOGD("CustomKnockSensor", "Knock Pattern Length: %d", knock_pattern_length_);
 
       ESP_LOGD("CustomKnockSensor", "Knock Sensor Threshold: %d", knock_sensor_threshold_);
