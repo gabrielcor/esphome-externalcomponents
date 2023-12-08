@@ -1,0 +1,40 @@
+esphome:
+  name: test_knock_pattern_detector
+  friendly_name: test_knock_pattern_detector
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  manual_ip:
+     static_ip: 192.168.1.79
+     gateway: 192.168.1.1
+     subnet: 255.255.255.0  
+
+captive_portal:
+
+external_components:
+ - source:
+     type: git
+     url: https://github.com/gabrielcor/esphome-externalcomponents
+   refresh: 1s
+   components: [knock_pattern_detector]
+     
+sensor:
+  - platform: knock_pattern_detector
+    id: sensor_knock
+    pin: 33
+    knock_pattern: [512,256,256,512,1024,512]
+    knock_sensor_threshold: 1
