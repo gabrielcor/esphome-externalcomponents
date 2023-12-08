@@ -18,7 +18,6 @@ CustomKnockSensor = knock_pattern_detector_ns.class_("CustomKnockPatternDetector
 
 
 CONF_KNOCK_PATTERN = "knock_pattern"
-CONF_KNOCK_PATTERN_LENGTH = "knock_pattern_length"
 CONF_KNOCK_SENSOR_THRESHOLD = "knock_sensor_threshold"
 CONF_KNOCK_ERROR_TOLERANCE = "knock_error_tolerance"
 CONF_KNOCK_AVERAGE_ERROR_TOLERANCE = "knock_average_error_tolerance"
@@ -41,7 +40,6 @@ CONFIG_SCHEMA = sensor.sensor_schema(
     {
         cv.Required(CONF_PIN): pins.gpio_input_pin_schema,
         cv.Optional(CONF_KNOCK_PATTERN, default=[512, 256, 256, 512, 1024, 512]): cv.ensure_list(cv.positive_int),
-        cv.Optional(CONF_KNOCK_PATTERN_LENGTH, default=6): cv.positive_int,
         cv.Optional(CONF_KNOCK_SENSOR_THRESHOLD, default=1): validate_sensor_threshold,
         cv.Optional(CONF_KNOCK_ERROR_TOLERANCE, default=256): cv.positive_int,
         cv.Optional(CONF_KNOCK_AVERAGE_ERROR_TOLERANCE, default=256): cv.positive_int,
@@ -57,7 +55,6 @@ async def to_code(config):
     pin = await cg.gpio_pin_expression(config[CONF_PIN])
     cg.add(var.set_pin(pin))
     cg.add(var.set_knock_pattern(config[CONF_KNOCK_PATTERN]))
-    cg.add(var.set_knock_pattern_length(config[CONF_KNOCK_PATTERN_LENGTH]))
     cg.add(var.set_knock_sensor_threshold(config[CONF_KNOCK_SENSOR_THRESHOLD]))
     cg.add(var.set_knock_error_tolerance(config[CONF_KNOCK_ERROR_TOLERANCE]))
     cg.add(var.set_knock_average_error_tolerance(config[CONF_KNOCK_AVERAGE_ERROR_TOLERANCE]))
