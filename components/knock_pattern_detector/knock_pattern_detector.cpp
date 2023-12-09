@@ -5,7 +5,21 @@ namespace knock_pattern_detector {
 static const char *const TAG = "knock_pattern_detector";
 
 void CustomKnockPatternDetector::setup() {
- 
+ // Read 10 analog samples from ADC and calculate the average mean
+  int adc_value = 0;
+  int adc_sum = 0;
+  int adc_mean = 0;
+  int adc_samples = 10;
+  for (int i = 0; i < adc_samples; i++) {
+    adc_value = adc_-> get_raw_state();
+    ESP_LOGD(TAG, "Iteration: %d value %d", i, adc_value );
+    // adc_value = adc_->state;
+    adc_sum += adc_value;
+    delay(10);
+  }
+  adc_mean = adc_sum / adc_samples;
+  ESP_LOGD(TAG, "ADC Mean: %d", adc_mean);
+
 }
 
 void CustomKnockPatternDetector::dump_config() {
@@ -32,7 +46,7 @@ void CustomKnockPatternDetector::dump_config() {
   ESP_LOGCONFIG("CustomKnockSensor", "Knock Pattern Length: %d", knock_pattern_length_);
   // show ADC Sensor configuration
   LOG_SENSOR("  ", "ADC Sensor", this->adc_);
-  
+
 
 }
 /*
