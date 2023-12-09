@@ -47,7 +47,7 @@ void CustomKnockPatternDetector::loop() {
     int adc_samples = 10;
 
     for (int i = 0; i < adc_samples; i++) {
-      adc_value = adc_-> sample();
+      adc_value = adc_-> state;
       ESP_LOGD(TAG, "Iteration: %d value %d", i, adc_value );
       // adc_value = adc_->state;
       adc_sum += adc_value;
