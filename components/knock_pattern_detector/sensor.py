@@ -1,18 +1,24 @@
+import logging
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome import automation, pins
 from esphome.components import sensor
 from esphome.components import adc
 from esphome.components.adc.sensor import ADCSensor
+import esphome.final_validate as fv
 
 from esphome.const import (
     CONF_ID,
     CONF_PIN,
     CONF_NUMBER,
     CONF_VALUE,
+    CONF_PLATFORM,
     STATE_CLASS_TOTAL_INCREASING,
 )
 from esphome.core import CORE
+
+_LOGGER = logging.getLogger(__name__)
+
 
 CONF_ADC = "adc"
 CONF_MAGLOCK_PIN = "maglock_pin"
@@ -54,6 +60,33 @@ CONFIG_SCHEMA = sensor.sensor_schema(
     }
 )
 
+
+# Validate that the parent ADC is an ADC
+def validate_parent_adc_config(value):
+    platform = value.get(CONF_PLATFORM)
+    # only allowed platform is adc
+    PWM_GOOD = ["adc"]
+    PWM_MAYBE = ["adc128s102","adc128s103",]
+
+    if platform not in PWM_GOOD + PWM_MAYBE:
+        raise cv.Invalid(f"Component knock_pattern_detector cannot use {platform} as adc component")
+
+    if platform in PWM_MAYBE:
+        _LOGGER.warning(
+            "Component is not known to work with the selected ADCtype. "
+            "Make sure this ADC supports the processor."
+        )
+
+
+# Final validation
+FINAL_VALIDATE_SCHEMA = cv.Schema(
+    {
+        cv.Optional(CONF_ADC): fv.id_declaration_match_schema(
+            validate_parent_adc_config
+        ),
+    },
+    extra=cv.ALLOW_EXTRA,
+)
 
 async def to_code(config):
     var = await sensor.new_sensor(config)
