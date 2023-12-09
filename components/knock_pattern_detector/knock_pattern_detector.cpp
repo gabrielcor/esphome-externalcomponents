@@ -3,22 +3,10 @@ namespace esphome {
 namespace knock_pattern_detector {
 
 static const char *const TAG = "knock_pattern_detector";
+int mean_calculated = 0;
+float adc_mean = 0;
 
 void CustomKnockPatternDetector::setup() {
- // Read 10 analog samples from ADC and calculate the average mean
-  int adc_value = 0;
-  int adc_sum = 0;
-  int adc_mean = 0;
-  int adc_samples = 10;
-  for (int i = 0; i < adc_samples; i++) {
-    adc_value = adc_-> get_raw_state();
-    ESP_LOGD(TAG, "Iteration: %d value %d", i, adc_value );
-    // adc_value = adc_->state;
-    adc_sum += adc_value;
-    delay(10);
-  }
-  adc_mean = adc_sum / adc_samples;
-  ESP_LOGD(TAG, "ADC Mean: %d", adc_mean);
 
 }
 
@@ -49,19 +37,27 @@ void CustomKnockPatternDetector::dump_config() {
 
 
 }
-/*
-  std::vector<int> knock_pattern_;  
-  int knock_pattern_length_;
-  int knock_sensor_threshold_;
-  int knock_error_tolerance_;
-  int knock_average_error_tolerance_;
-  int knock_pattern_mingap_between_knocks_;
-  int knock_pattern_maxgap_between_knocks_;
 
-*/
+
 void CustomKnockPatternDetector::loop() {
-  // Do nothing in update since this is just a demonstration
-  // You can implement functionality to read sensor data periodically here if needed
+   // Read 10 analog samples from ADC and calculate the average mean
+  if (mean_calculated == 0) {
+    float adc_value = 0;
+    float adc_sum = 0;
+    int adc_samples = 10;
+
+    for (int i = 0; i < adc_samples; i++) {
+      adc_value = adc_-> sample();
+      ESP_LOGD(TAG, "Iteration: %d value %d", i, adc_value );
+      // adc_value = adc_->state;
+      adc_sum += adc_value;
+      delay(10);
+    }
+    adc_mean = adc_sum / adc_samples;
+    ESP_LOGD(TAG, "ADC Mean: %d", adc_mean);
+    mean_calculated = 1;
+  }
+
 }
 }
 }
