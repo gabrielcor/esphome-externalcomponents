@@ -1,5 +1,5 @@
 #pragma once
-
+#include "esphome/components/adc/adc_sensor.h"
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/core/component.h"
 #include "esphome/core/hal.h"
@@ -19,12 +19,15 @@ class CustomKnockPatternDetector : public sensor::Sensor, public Component {
   void set_knock_average_error_tolerance(uint32_t tolerance) { this->knock_average_error_tolerance_ = tolerance; }
   void set_knock_pattern_mingap_between_knocks(uint32_t mingap) { this->knock_pattern_mingap_between_knocks_ = mingap; }
   void set_knock_pattern_maxgap_between_knocks(uint32_t maxgap) { this->knock_pattern_maxgap_between_knocks_ = maxgap; }
+  void set_adc(adc::ADCSensor *adc) { this->adc_ = adc; }
 
- void setup() override;
- void loop() override;
- void dump_config() override;
 
- protected:
+
+void setup() override;
+void loop() override;
+void dump_config() override;
+
+protected:
   GPIOPin *maglock_pin_;
   std::vector<int> knock_pattern_;  
   int knock_pattern_length_;
@@ -33,6 +36,9 @@ class CustomKnockPatternDetector : public sensor::Sensor, public Component {
   int knock_average_error_tolerance_;
   int knock_pattern_mingap_between_knocks_;
   int knock_pattern_maxgap_between_knocks_;
+  // Add ADCSensor
+  adc::ADCSensor *adc_;
+
 
 };
 } // namespace knock_pattern_detector

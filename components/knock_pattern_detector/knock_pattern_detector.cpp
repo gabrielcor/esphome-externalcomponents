@@ -30,6 +30,9 @@ void CustomKnockPatternDetector::dump_config() {
   }
   set_knock_pattern_length(pattern_count);
   ESP_LOGCONFIG("CustomKnockSensor", "Knock Pattern Length: %d", knock_pattern_length_);
+  // show ADC Sensor configuration
+  LOG_SENSOR("  ", "ADC Sensor", this->adc_);
+  
 
 }
 /*

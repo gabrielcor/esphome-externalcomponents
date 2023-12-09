@@ -93,6 +93,8 @@ async def to_code(config):
     await cg.register_component(var, config)
     maglock_pin = await cg.gpio_pin_expression(config[CONF_MAGLOCK_PIN])
     cg.add(var.set_maglock_pin(maglock_pin))
+    adc = await cg.get_variable(config[CONF_ADC])
+    cg.add(var.set_adc(adc))
     cg.add(var.set_knock_pattern(config[CONF_KNOCK_PATTERN]))
     cg.add(var.set_knock_sensor_threshold(config[CONF_KNOCK_SENSOR_THRESHOLD]))
     cg.add(var.set_knock_error_tolerance(config[CONF_KNOCK_ERROR_TOLERANCE]))
