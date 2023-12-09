@@ -13,10 +13,15 @@ external_components:
      type: local
      path: components
    components: [knock_pattern_detector]
-     
+
 sensor:
+  - platform: adc
+    pin: 33
+    id: adcsensor2knock
+    name: "Sensor ADC 4 Knock"
   - platform: knock_pattern_detector
     id: sensor_knock
-    pin: 33
+    maglock_pin: 34
+    adc: adcsensor2knock
     knock_pattern: [512,256,256,512,1024,512]
     knock_sensor_threshold: 1

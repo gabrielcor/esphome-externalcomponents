@@ -10,7 +10,7 @@ void CustomKnockPatternDetector::setup() {
 
 void CustomKnockPatternDetector::dump_config() {
   LOG_SENSOR("", "Pulse Meter", this);
-  LOG_PIN("  Pin: ", this->pin_);
+  LOG_PIN("  Maglock Pin: ", this->maglock_pin_);
     
   ESP_LOGCONFIG("CustomKnockSensor", "Knock Sensor Threshold: %d", knock_sensor_threshold_);
 

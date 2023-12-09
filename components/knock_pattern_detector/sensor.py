@@ -2,6 +2,9 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome import automation, pins
 from esphome.components import sensor
+from esphome.components import adc
+from esphome.components.adc.sensor import ADCSensor
+
 from esphome.const import (
     CONF_ID,
     CONF_PIN,
@@ -11,6 +14,8 @@ from esphome.const import (
 )
 from esphome.core import CORE
 
+CONF_ADC = "adc"
+CONF_MAGLOCK_PIN = "maglock_pin"
 CODEOWNERS = ["@gabrielcor"]
 
 knock_pattern_detector_ns = cg.esphome_ns.namespace("knock_pattern_detector")
@@ -38,7 +43,8 @@ CONFIG_SCHEMA = sensor.sensor_schema(
     state_class=STATE_CLASS_TOTAL_INCREASING,
 ).extend(
     {
-        cv.Required(CONF_PIN): pins.gpio_input_pin_schema,
+        cv.Required(CONF_MAGLOCK_PIN): pins.gpio_input_pin_schema,
+        cv.Required(CONF_ADC): cv.use_id(ADCSensor),
         cv.Optional(CONF_KNOCK_PATTERN, default=[512, 256, 256, 512, 1024, 512]): cv.ensure_list(cv.positive_int),
         cv.Optional(CONF_KNOCK_SENSOR_THRESHOLD, default=1): validate_sensor_threshold,
         cv.Optional(CONF_KNOCK_ERROR_TOLERANCE, default=256): cv.positive_int,
@@ -52,8 +58,8 @@ CONFIG_SCHEMA = sensor.sensor_schema(
 async def to_code(config):
     var = await sensor.new_sensor(config)
     await cg.register_component(var, config)
-    pin = await cg.gpio_pin_expression(config[CONF_PIN])
-    cg.add(var.set_pin(pin))
+    maglock_pin = await cg.gpio_pin_expression(config[CONF_MAGLOCK_PIN])
+    cg.add(var.set_maglock_pin(maglock_pin))
     cg.add(var.set_knock_pattern(config[CONF_KNOCK_PATTERN]))
     cg.add(var.set_knock_sensor_threshold(config[CONF_KNOCK_SENSOR_THRESHOLD]))
     cg.add(var.set_knock_error_tolerance(config[CONF_KNOCK_ERROR_TOLERANCE]))

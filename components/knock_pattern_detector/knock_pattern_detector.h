@@ -11,7 +11,7 @@ namespace knock_pattern_detector {
 class CustomKnockPatternDetector : public sensor::Sensor, public Component {
  public:
 
-  void set_pin(InternalGPIOPin *pin) { this->pin_ = pin; }
+  void set_maglock_pin(InternalGPIOPin *pin) { this->maglock_pin_ = pin; }
   void set_knock_pattern(std::vector<int> vector) { this->knock_pattern_ = vector; }
   void set_knock_pattern_length(uint32_t length) { this->knock_pattern_length_ = length; }
   void set_knock_sensor_threshold(uint32_t threshold) { this->knock_sensor_threshold_ = threshold; }
@@ -25,7 +25,7 @@ class CustomKnockPatternDetector : public sensor::Sensor, public Component {
  void dump_config() override;
 
  protected:
-  GPIOPin *pin_;
+  GPIOPin *maglock_pin_;
   std::vector<int> knock_pattern_;  
   int knock_pattern_length_;
   int knock_sensor_threshold_;
