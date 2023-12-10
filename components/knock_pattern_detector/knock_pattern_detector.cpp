@@ -16,8 +16,6 @@ float realThreshold = 0;
 void CustomKnockPatternDetector::setup() {
 
     start_time = millis();
-    realThreshold = knock_sensor_threshold_ / knock_sensor_threshold_divider_;
-    ESP_LOGD("CustomKnockSensor", "Real Threshold: %4f", realThreshold);
 
 }
 
@@ -44,6 +42,10 @@ void CustomKnockPatternDetector::calc_mean_adc()
       baseReading = adc_sum / adc_samples;
       ESP_LOGD(TAG, "Loop ADC Mean: %.4f Voltios", baseReading);
       hasrun = 1;
+
+      realThreshold = knock_sensor_threshold_ / knock_sensor_threshold_divider_;
+      ESP_LOGD(TAG, "Real Threshold: %4f", realThreshold);
+
     }
   }
 }
