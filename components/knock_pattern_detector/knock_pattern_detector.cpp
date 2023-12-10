@@ -182,7 +182,8 @@ bool comparePattern(int inputPattern[], int secretKnockPattern[]) {
   // TEST #1: Has it got the correct number of knocks?
   for (int i=0; i<numKnocksInPattern-1; i++){
     if(inputPattern[i] == 0) {
-      ESP_LOGD("TEST #1 FAILED. Input pattern had %d knocks. Secret pattern has %d knocks.", i+1, numKnocksInPattern);
+      int ipknocks = i+1;
+      ESP_LOGD("TEST #1 FAILED. Input pattern had %d knocks. Secret pattern has %d knocks.", ipknocks, numKnocksInPattern);
       return false;
     }
   }
@@ -194,7 +195,8 @@ bool comparePattern(int inputPattern[], int secretKnockPattern[]) {
   for (int i=0; i<numKnocksInPattern-1; i++){
     int knockDelta = abs(inputPattern[i] - secretKnockPattern[i]);
     if (knockDelta > knockErrorTolerance){
-        ESP_LOGD("TEST #2 FAILED. Input pattern had delay after knock #%d of %dms. Secret pattern had %dms.", i+1, inputPattern[i], secretKnockPattern[i]);
+        int ipknockdelay = i+1;
+        ESP_LOGD("TEST #2 FAILED. Input pattern had delay after knock #%d of %dms. Secret pattern had %dms.", ipknockdelay, inputPattern[i], secretKnockPattern[i]);
         return false;
     }
     totalDelta += knockDelta;
@@ -202,7 +204,8 @@ bool comparePattern(int inputPattern[], int secretKnockPattern[]) {
       
   // TEST #3: Is the whole pattern too sloppy?
   if (totalDelta / numKnocksInPattern > averageKnockErrorTolerance){
-      ESP_LOGD("TEST #3 FAILED. Input pattern had average timing error of %dms. Secret pattern had %dms.", totalDelta / numKnocksInPattern, averageKnockErrorTolerance);
+      int averageTimingError = totalDelta / numKnocksInPattern;
+      ESP_LOGD("TEST #3 FAILED. Input pattern had average timing error of %dms. Secret pattern had %dms.", averageTimingError, averageKnockErrorTolerance);
     return false; 
   }
       
