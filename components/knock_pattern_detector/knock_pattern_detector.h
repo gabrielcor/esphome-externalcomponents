@@ -29,6 +29,8 @@ void loop() override;
 void dump_config() override;
 void calc_mean_adc();
 bool knockDetected();
+void listenToKnockPattern();
+void knockDelay();
 
 protected:
   GPIOPin *maglock_pin_;
