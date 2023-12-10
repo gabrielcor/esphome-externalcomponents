@@ -10,6 +10,7 @@ float baseReading = 0;
 
 int hasrun=0;
 uint32_t start_time = 0;
+uint32_t last_time = millis();
 
 void CustomKnockPatternDetector::setup() {
 
@@ -48,15 +49,15 @@ bool CustomKnockPatternDetector::knockDetected()
 {
   // Read the ADC sensor
   float value_v = adc_->sample();
+  ESP_LOGD(TAG, "Kd-Got voltage value=%.4fVoltios", value_v);
 
   // Calculate the difference between the current reading and the base reading
   float diff = value_v - baseReading;
+  ESP_LOGD(TAG, "Kd-Diff: %.4f Voltios", diff);
 
   // If the difference is greater than the threshold, then a knock has been detected
   if (diff > knock_sensor_threshold_)
   {
-    ESP_LOGD(TAG, "Kd-Got voltage value=%.4fVoltios", value_v);
-    ESP_LOGD(TAG, "Kd-Diff: %.4f Voltios", diff);
     ESP_LOGD(TAG, "Kd-Knock detected");
     return true;
   }
@@ -67,12 +68,16 @@ bool CustomKnockPatternDetector::knockDetected()
 }
 void CustomKnockPatternDetector::loop() {
   calc_mean_adc();
-  if (knockDetected())
-  {
 
+  if ((baseReading != 0) && (millis () - last_time > 1000))
+  {
+    if (knockDetected())
+    {
+   
+    }
+  
   }
 }
-
 
 void CustomKnockPatternDetector::dump_config() {
   LOG_SENSOR("", "Pulse Meter", this);
