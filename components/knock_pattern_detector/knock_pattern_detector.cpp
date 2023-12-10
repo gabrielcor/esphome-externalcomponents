@@ -211,6 +211,7 @@ bool comparePattern(int inputPattern[], int secretKnockPattern[]) {
   }
       
   // If the code gets this far, all tests have passed!
+  ESP_LOGD("Knock Pattern Detector", "Knock pattern matched!");
   return true;
 }
 
