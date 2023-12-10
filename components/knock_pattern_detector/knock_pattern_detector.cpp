@@ -5,6 +5,8 @@ namespace knock_pattern_detector {
 static const char *const TAG = "knock_pattern_detector";
 
 float adc_mean = 0;
+int hasrun=0;
+uint32_t start_time = 0;
 
 void CustomKnockPatternDetector::setup() {
 
@@ -21,11 +23,30 @@ void CustomKnockPatternDetector::setup() {
     adc_mean = adc_sum / adc_samples;
     ESP_LOGD(TAG, "ADC Mean: %.4f Voltios", adc_mean);
   
+    start_time = millis();
 
 }
 
 void CustomKnockPatternDetector::loop() {
 
+    if (hasrun != 0) {
+    // check if ten seconds have passed since the start of the program:
+        if (millis() - start_time > 10000) {
+          // Calculate the average mean of 10 samples from ADC
+          float adc_sum = 0;
+          int adc_samples = 10;
+
+          for (int i = 0; i < adc_samples; i++) {
+            float value_v = adc_->sample();
+            ESP_LOGD(TAG, "Loop Iteration: %d Got voltage value=%.4fVoltios", i, value_v);
+            adc_sum += value_v;
+            delay(10);
+          }
+          adc_mean = adc_sum / adc_samples;
+          ESP_LOGD(TAG, "Loop ADC Mean: %.4f Voltios", adc_mean);
+          hasrun = 1;
+        }
+    }
 }
 
 void CustomKnockPatternDetector::dump_config() {
