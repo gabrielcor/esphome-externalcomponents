@@ -75,7 +75,7 @@ void CustomKnockPatternDetector::loop() {
     {
    
     }
-  
+    last_time = millis();
   }
 }
 
