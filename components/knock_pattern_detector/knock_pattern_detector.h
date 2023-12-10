@@ -26,6 +26,7 @@ class CustomKnockPatternDetector : public sensor::Sensor, public Component {
 void setup() override;
 void loop() override;
 void dump_config() override;
+void calc_mean_adc();
 
 protected:
   GPIOPin *maglock_pin_;
