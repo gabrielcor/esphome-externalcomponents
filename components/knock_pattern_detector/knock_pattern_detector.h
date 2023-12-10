@@ -27,6 +27,7 @@ void setup() override;
 void loop() override;
 void dump_config() override;
 void calc_mean_adc();
+bool knockDetected();
 
 protected:
   GPIOPin *maglock_pin_;

@@ -4,7 +4,10 @@ namespace knock_pattern_detector {
 
 static const char *const TAG = "knock_pattern_detector";
 
-float adc_mean = 0;
+// The base reading of the sensor from which knocks will be measured.
+// This value will be calibrated based on an average reading taken in calc_mean_adc()
+float baseReading = 0;
+
 int hasrun=0;
 uint32_t start_time = 0;
 
@@ -34,15 +37,40 @@ void CustomKnockPatternDetector::calc_mean_adc()
         adc_sum += value_v;
         delay(10);
       }
-      adc_mean = adc_sum / adc_samples;
+      baseReading = adc_sum / adc_samples;
       ESP_LOGD(TAG, "Loop ADC Mean: %.4f Voltios", adc_mean);
       hasrun = 1;
     }
   }
 }
 
+bool CustomKnockPatternDetector::knockDetected()
+{
+  // Read the ADC sensor
+  float value_v = adc_->sample();
+
+  // Calculate the difference between the current reading and the base reading
+  float diff = value_v - baseReading;
+
+  // If the difference is greater than the threshold, then a knock has been detected
+  if (diff > knock_sensor_threshold_)
+  {
+    ESP_LOGD(TAG, "Kd-Got voltage value=%.4fVoltios", value_v);
+    ESP_LOGD(TAG, "Kd-Diff: %.4f Voltios", diff);
+    ESP_LOGD(TAG, "Kd-Knock detected");
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
 void CustomKnockPatternDetector::loop() {
   calc_mean_adc();
+  if (knockDetected())
+  {
+
+  }
 }
 
 
