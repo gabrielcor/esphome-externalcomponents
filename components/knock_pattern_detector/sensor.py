@@ -30,6 +30,7 @@ CustomKnockSensor = knock_pattern_detector_ns.class_("CustomKnockPatternDetector
 
 CONF_KNOCK_PATTERN = "knock_pattern"
 CONF_KNOCK_SENSOR_THRESHOLD = "knock_sensor_threshold"
+CONF_KNOCK_SENSOR_THRESHOLD_DIVIDER = "knock_sensor_threshold_divider"
 CONF_KNOCK_ERROR_TOLERANCE = "knock_error_tolerance"
 CONF_KNOCK_AVERAGE_ERROR_TOLERANCE = "knock_average_error_tolerance"
 CONF_KNOCK_PATTERN_MINGAP_BETWEEN_KNOCKS = "knock_pattern_mingap_between_knocks"
@@ -52,7 +53,8 @@ CONFIG_SCHEMA = sensor.sensor_schema(
         cv.Required(CONF_MAGLOCK_PIN): pins.gpio_input_pin_schema,
         cv.Required(CONF_ADC): cv.use_id(ADCSensor),
         cv.Optional(CONF_KNOCK_PATTERN, default=[512, 256, 256, 512, 1024, 512]): cv.ensure_list(cv.positive_int),
-        cv.Optional(CONF_KNOCK_SENSOR_THRESHOLD, default=1): validate_sensor_threshold,
+        cv.Optional(CONF_KNOCK_SENSOR_THRESHOLD, default=300): validate_sensor_threshold,
+        cv.Optional(CONF_KNOCK_SENSOR_THRESHOLD_DIVIDER, default=10000): cv.positive_int,
         cv.Optional(CONF_KNOCK_ERROR_TOLERANCE, default=256): cv.positive_int,
         cv.Optional(CONF_KNOCK_AVERAGE_ERROR_TOLERANCE, default=256): cv.positive_int,
         cv.Optional(CONF_KNOCK_PATTERN_MINGAP_BETWEEN_KNOCKS, default=125): cv.positive_int,
@@ -97,6 +99,7 @@ async def to_code(config):
     cg.add(var.set_adc(adc))
     cg.add(var.set_knock_pattern(config[CONF_KNOCK_PATTERN]))
     cg.add(var.set_knock_sensor_threshold(config[CONF_KNOCK_SENSOR_THRESHOLD]))
+    cg.add(var.set_knock_sensor_threshold_divider(config[CONF_KNOCK_SENSOR_THRESHOLD_DIVIDER]))
     cg.add(var.set_knock_error_tolerance(config[CONF_KNOCK_ERROR_TOLERANCE]))
     cg.add(var.set_knock_average_error_tolerance(config[CONF_KNOCK_AVERAGE_ERROR_TOLERANCE]))
     cg.add(var.set_knock_pattern_mingap_between_knocks(config[CONF_KNOCK_PATTERN_MINGAP_BETWEEN_KNOCKS]))

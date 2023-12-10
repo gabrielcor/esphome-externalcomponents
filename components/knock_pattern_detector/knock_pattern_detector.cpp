@@ -11,10 +11,13 @@ float baseReading = 0;
 int hasrun=0;
 uint32_t start_time = 0;
 uint32_t last_time = millis();
+float realThreshold = 0;
 
 void CustomKnockPatternDetector::setup() {
 
     start_time = millis();
+    realThreshold = knock_sensor_threshold_ / knock_sensor_threshold_divider_;
+    ESP_LOGD("CustomKnockSensor", "Real Threshold: %4f", realThreshold);
 
 }
 
@@ -49,15 +52,15 @@ bool CustomKnockPatternDetector::knockDetected()
 {
   // Read the ADC sensor
   float value_v = adc_->sample();
-  ESP_LOGD(TAG, "Kd-Got voltage value=%.4fVoltios", value_v);
 
   // Calculate the difference between the current reading and the base reading
   float diff = value_v - baseReading;
-  ESP_LOGD(TAG, "Kd-Diff: %.4f Voltios", diff);
 
   // If the difference is greater than the threshold, then a knock has been detected
-  if (diff > knock_sensor_threshold_)
+  if (diff > realThreshold)
   {
+    ESP_LOGD(TAG, "Kd-Got voltage value=%.4fVoltios", value_v);
+    ESP_LOGD(TAG, "Kd-Diff: %.4f Voltios", diff);
     ESP_LOGD(TAG, "Kd-Knock detected");
     return true;
   }
@@ -84,6 +87,8 @@ void CustomKnockPatternDetector::dump_config() {
   LOG_PIN("  Maglock Pin: ", this->maglock_pin_);
     
   ESP_LOGCONFIG("CustomKnockSensor", "Knock Sensor Threshold: %d", knock_sensor_threshold_);
+
+  ESP_LOGCONFIG("CustomKnockSensor", "Knock Sensor Threshold Divider: %d", knock_sensor_threshold_divider_);
 
   ESP_LOGCONFIG("CustomKnockSensor", "Knock Error Tolerance: %d", knock_error_tolerance_);
 

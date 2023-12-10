@@ -15,6 +15,7 @@ class CustomKnockPatternDetector : public sensor::Sensor, public Component {
   void set_knock_pattern(std::vector<int> vector) { this->knock_pattern_ = vector; }
   void set_knock_pattern_length(uint32_t length) { this->knock_pattern_length_ = length; }
   void set_knock_sensor_threshold(uint32_t threshold) { this->knock_sensor_threshold_ = threshold; }
+  void set_knock_sensor_threshold_divider(uint32_t threshold_divider) { this->knock_sensor_threshold_divider_ = threshold_divider; }
   void set_knock_error_tolerance(uint32_t tolerance) { this->knock_error_tolerance_ = tolerance; }    
   void set_knock_average_error_tolerance(uint32_t tolerance) { this->knock_average_error_tolerance_ = tolerance; }
   void set_knock_pattern_mingap_between_knocks(uint32_t mingap) { this->knock_pattern_mingap_between_knocks_ = mingap; }
@@ -34,6 +35,7 @@ protected:
   std::vector<int> knock_pattern_;  
   int knock_pattern_length_;
   int knock_sensor_threshold_;
+  int knock_sensor_threshold_divider_;
   int knock_error_tolerance_;
   int knock_average_error_tolerance_;
   int knock_pattern_mingap_between_knocks_;
