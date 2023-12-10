@@ -38,7 +38,7 @@ void CustomKnockPatternDetector::calc_mean_adc()
         delay(10);
       }
       baseReading = adc_sum / adc_samples;
-      ESP_LOGD(TAG, "Loop ADC Mean: %.4f Voltios", adc_mean);
+      ESP_LOGD(TAG, "Loop ADC Mean: %.4f Voltios", baseReading);
       hasrun = 1;
     }
   }
