@@ -29,7 +29,7 @@ void CustomKnockPatternDetector::setup() {
 
 void CustomKnockPatternDetector::loop() {
 
-    if (hasrun != 0) {
+    if (hasrun == 0) {
     // check if ten seconds have passed since the start of the program:
         if (millis() - start_time > 10000) {
           // Calculate the average mean of 10 samples from ADC
