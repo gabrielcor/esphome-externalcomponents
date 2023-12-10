@@ -10,6 +10,7 @@ esp32:
 
 # Enable logging
 logger:
+  level: VERBOSE
 
 # Enable Home Assistant API
 api:
@@ -38,9 +39,15 @@ sensor:
     pin: 4
     id: adcsensor2knock
     name: "Sensor ADC 4 Knock"
+    update_interval: 600s
+
   - platform: knock_pattern_detector
     id: sensor_knock
     maglock_pin: 34
     adc: adcsensor2knock
     knock_pattern: [512,256,256,512,1024,512]
     knock_sensor_threshold: 1
+
+button:
+  - platform: restart
+    name: "Restart"
