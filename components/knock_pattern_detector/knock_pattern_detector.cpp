@@ -15,6 +15,11 @@ float baseReading = 0;
 int inputPattern[20];
 int numKnocksInPattern = 0;
 
+int secretKnockPattern[20];
+
+int knockErrorTolerance;
+int averageKnockErrorTolerance;
+
 int hasrun=0;
 uint32_t start_time = 0;
 
@@ -130,7 +135,89 @@ void CustomKnockPatternDetector::listenToKnockPattern() {
 
 }
 
+long map(long x, long in_min, long in_max, long out_min, long out_max) {
+    const long run = in_max - in_min;
+    if(run == 0){
+        return -1; // AVR returns -1, SAM returns 0
+    }
+    const long rise = out_max - out_min;
+    const long delta = x - in_min;
+    return (delta * rise) / run + out_min;
+}
 
+
+/** 
+ * Scales the length of delays between knocks in an input pattern to a normalised range of values
+ * This allows us to compare the rhythm of knock patterns irrespective of the tempo at which they were entered
+ * 
+ */
+void normalizeKnockPattern(int knockPattern[]){
+  // Keep track of the longest interval in the pattern
+  int maxKnockInterval = 0;
+    
+  // Loop through the pattern
+  for (int i=0; i<numKnocksInPattern-1; i++){
+    // Keep track of the longest gap between knocks 
+    if (knockPattern[i] > maxKnockInterval){ maxKnockInterval = knockPattern[i]; }
+  }
+  
+  // Normalize the pattern by scaling all readings from 0-1024
+  for (int i=0; i<numKnocksInPattern-1; i++){
+    // Because arrays are passed by reference, changing the value here will change the value in the global variable
+    knockPattern[i] = map(knockPattern[i], 0, maxKnockInterval, 0, 1024);
+  }
+}
+
+void printPattern(int knockPattern[]){
+  // Print the pattern
+  for (int i=0; i<numKnocksInPattern-1; i++){
+    ESP_LOGD(TAG, "Knock Pattern: %d", knockPattern[i]);
+  }
+}
+
+// Compares two normalised knock patterns
+// Returns true if the patterns match within given tolerance, or false otherwise
+bool comparePattern(int inputPattern[], int secretKnockPattern[]) {
+
+  // TEST #1: Has it got the correct number of knocks?
+  for (int i=0; i<numKnocksInPattern-1; i++){
+    if(inputPattern[i] == 0) {
+      ESP_LOGD("TEST #1 FAILED. Input pattern had %d knocks. Secret pattern has %d knocks.", i+1, numKnocksInPattern);
+      return false;
+    }
+  }
+
+  // This variable records the total timing difference between patterns
+  int totalDelta = 0;
+      
+  // TEST #2: Is the delay between any two successive knocks in the sequence outside the allowed tolerance?
+  for (int i=0; i<numKnocksInPattern-1; i++){
+    int knockDelta = abs(inputPattern[i] - secretKnockPattern[i]);
+    if (knockDelta > knockErrorTolerance){
+        ESP_LOGD("TEST #2 FAILED. Input pattern had delay after knock #%d of %dms. Secret pattern had %dms.", i+1, inputPattern[i], secretKnockPattern[i]);
+        return false;
+    }
+    totalDelta += knockDelta;
+  }
+      
+  // TEST #3: Is the whole pattern too sloppy?
+  if (totalDelta / numKnocksInPattern > averageKnockErrorTolerance){
+      ESP_LOGD("TEST #3 FAILED. Input pattern had average timing error of %dms. Secret pattern had %dms.", totalDelta / numKnocksInPattern, averageKnockErrorTolerance);
+    return false; 
+  }
+      
+  // If the code gets this far, all tests have passed!
+  return true;
+}
+
+void onPuzzleSolved()
+{}
+void onIncorrectInput()
+{}
+
+/**
+** Main Loop
+*/
 void CustomKnockPatternDetector::loop() {
   calc_mean_adc();
 
@@ -139,6 +226,19 @@ void CustomKnockPatternDetector::loop() {
     if (knockDetected())
     {
         listenToKnockPattern();
+        normalizeKnockPattern(inputPattern);
+        ESP_LOGD(TAG,"Knock pattern received");
+        printPattern(inputPattern);
+        ESP_LOGD(TAG,"Knock pattern expected");
+        printPattern(secretKnockPattern);
+      if(comparePattern(inputPattern, secretKnockPattern)){
+        onPuzzleSolved(); 
+      }      
+      // Knock pattern entered did *not* match stored pattern
+      else {
+        onIncorrectInput();
+      }
+
     }
   }
 }
@@ -171,7 +271,13 @@ void CustomKnockPatternDetector::dump_config() {
   ESP_LOGCONFIG("CustomKnockSensor", "Knock Pattern Length: %d", knock_pattern_length_);
   // show ADC Sensor configuration
   LOG_SENSOR("  ", "ADC Sensor", this->adc_);
-
+  // store knock_pattern_ in secretKnockPattern adjunsting also the length of secretKnockPattern with memset
+  memset(secretKnockPattern, 0, knock_pattern_length_ * sizeof(int));
+  for (int i=0; i<pattern_count; i++){
+    secretKnockPattern[i] = knock_pattern_[i];
+  }
+  knockErrorTolerance = knock_error_tolerance_;
+  averageKnockErrorTolerance  = knock_average_error_tolerance_;
 
 }
 
