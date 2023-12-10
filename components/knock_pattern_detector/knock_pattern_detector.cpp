@@ -10,7 +10,7 @@ float baseReading = 0;
 
 int hasrun=0;
 uint32_t start_time = 0;
-uint32_t last_time = millis();
+
 float realThreshold = 0;
 
 void CustomKnockPatternDetector::setup() {
@@ -75,13 +75,12 @@ bool CustomKnockPatternDetector::knockDetected()
 void CustomKnockPatternDetector::loop() {
   calc_mean_adc();
 
-  if ((baseReading != 0) && (millis () - last_time > 1000))
+  if ((baseReading != 0) )
   {
     if (knockDetected())
     {
    
     }
-    last_time = millis();
   }
 }
 
