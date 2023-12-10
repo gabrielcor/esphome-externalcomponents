@@ -42,19 +42,17 @@ void CustomKnockPatternDetector::dump_config() {
 void CustomKnockPatternDetector::loop() {
    // Read 10 analog samples from ADC and calculate the average mean
   if (mean_calculated == 0) {
-    float adc_value = 0;
     float adc_sum = 0;
     int adc_samples = 10;
 
     for (int i = 0; i < adc_samples; i++) {
-      adc_value = adc_-> state;
-      ESP_LOGD(TAG, "Iteration: %d value %d", i, adc_value );
-      // adc_value = adc_->state;
-      adc_sum += adc_value;
+      float value_v = adc_->sample();
+      ESP_LOGD(TAG, "Iteration: %d Got voltage value=%.4fVoltios", i, value_v);
+      adc_sum += value_v;
       delay(10);
     }
     adc_mean = adc_sum / adc_samples;
-    ESP_LOGD(TAG, "ADC Mean: %d", adc_mean);
+    ESP_LOGD(TAG, "ADC Mean: %.4f Voltios", adc_mean);
     mean_calculated = 1;
   }
 
