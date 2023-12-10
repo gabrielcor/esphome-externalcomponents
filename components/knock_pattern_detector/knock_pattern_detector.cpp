@@ -3,10 +3,28 @@ namespace esphome {
 namespace knock_pattern_detector {
 
 static const char *const TAG = "knock_pattern_detector";
-int mean_calculated = 0;
+
 float adc_mean = 0;
 
 void CustomKnockPatternDetector::setup() {
+
+    // Calculate the average mean of 10 samples from ADC
+    float adc_sum = 0;
+    int adc_samples = 10;
+
+    for (int i = 0; i < adc_samples; i++) {
+      float value_v = adc_->sample();
+      ESP_LOGD(TAG, "Iteration: %d Got voltage value=%.4fVoltios", i, value_v);
+      adc_sum += value_v;
+      delay(10);
+    }
+    adc_mean = adc_sum / adc_samples;
+    ESP_LOGD(TAG, "ADC Mean: %.4f Voltios", adc_mean);
+  
+
+}
+
+void CustomKnockPatternDetector::loop() {
 
 }
 
@@ -39,23 +57,8 @@ void CustomKnockPatternDetector::dump_config() {
 }
 
 
-void CustomKnockPatternDetector::loop() {
-   // Read 10 analog samples from ADC and calculate the average mean
-  if (mean_calculated == 0) {
-    float adc_sum = 0;
-    int adc_samples = 10;
 
-    for (int i = 0; i < adc_samples; i++) {
-      float value_v = adc_->sample();
-      ESP_LOGD(TAG, "Iteration: %d Got voltage value=%.4fVoltios", i, value_v);
-      adc_sum += value_v;
-      delay(10);
-    }
-    adc_mean = adc_sum / adc_samples;
-    ESP_LOGD(TAG, "ADC Mean: %.4f Voltios", adc_mean);
-    mean_calculated = 1;
-  }
+} // namespace knock_pattern_detector
+}  // namespace esphome
 
-}
-}
-}
+
